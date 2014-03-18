@@ -3,7 +3,7 @@ var Q = require("q");
 var _ = require("underscore");
 
 module.exports = m.ResourceController.extend({
-    dependencies: ["user.session"],
+    dependencies: ["session"],
     permissions: function(){
         if (this.user && this.user.id == this.value) return ["all"];
         var dfd = Q.defer();

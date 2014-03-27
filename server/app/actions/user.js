@@ -8,8 +8,8 @@ module.exports = m.ResourceController.extend({
         if (this.user && this.user.id == this.value) return ["all"];
         var dfd = Q.defer();
         this.model.count(function(e,len){
-            if (len == 0) dfd.resolve(["create","index"]);
-            else dfd.resolve(["index"]);
+            if (len == 0) dfd.resolve(["create","index","get"]);
+            else dfd.resolve(["index","get"]);
         });
         return dfd.promise;
     },

@@ -5,6 +5,9 @@
     "lang": "ru",
     "plugins": {},
     "db": {
-        "default": true
+        "default": {
+		"type":"sqlite",
+		"name":"someBase"
+	}
     }
 }

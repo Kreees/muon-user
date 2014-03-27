@@ -4,7 +4,7 @@ var crypto = require("crypto");
 
 module.exports = {
     permissions: function(){
-        if (this.session && this.session.id == this.value) return ["remove"]
+        if (this.session && this.session._id == this.value) return ["remove"]
         else return ["create"];
     },
     actions: {
@@ -12,11 +12,13 @@ module.exports = {
             var md5 = crypto.createHash("md5");
             var dfd = Q.defer();
             var _this = this;
-            _this.m.models["user.user"].db.find({$or: [
+            _this.app.models.user.find({or: [
                 {nick: _this.data.login, password: _this.data.password},
                 {email: _this.data.login, password: _this.data.password}
-            ]}).then(function(obj){
-                if (obj.length == 0) dfd.reject([404,{message: "Wrong user or password"}]);
+            ]}).run(function(e,docs){
+                    console.log(e,docs);
+                if (e) return dfd.reject([500,e]);
+                if (docs.length == 0) dfd.reject([403,{message: "Wrong user or password"}]);
                 else if (obj.length > 1){
                     console.log("Error: You have to many users in database with this credentials!")
                     dfd.reject({message: "Too many users with this credentials!"});
@@ -41,7 +43,7 @@ module.exports = {
                         m.log(e.message);
                     }
                 }
-            }).done();
+            });
             return dfd.promise;
         },
         "remove": m.ResourceController.actions.remove
